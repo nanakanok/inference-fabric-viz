@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inference Fabric Visualizer</title>
+    <meta
+      name="description"
+      content="Animated explainer of MoE LLM inference traffic with PD and AF disaggregation over scale-up links and scale-out leaf-spine fabrics, rail-optimized vs ToR."
+    />
+  </head>
+  <body>
+    <div id="app">
+      <div class="help" id="help"></div>
+      <header class="bar" id="controls"></header>
+      <main class="stage">
+        <section class="fabric">
+          <svg id="fabric" role="img" aria-label="Topology"></svg>
+          <div class="legend" id="legend"></div>
+        </section>
+        <aside class="panel" id="panel"></aside>
+      </main>
+      <footer class="bar" id="transport"></footer>
+    </div>
+    <div class="tooltip" id="tooltip" hidden></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

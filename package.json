@@ -1,0 +1,22 @@
+{
+  "name": "inference-fabric-viz",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Animated explainer of MoE LLM inference traffic (PD / AF disaggregation) over scale-up links and scale-out leaf-spine fabrics, rail-optimized vs ToR.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:single": "tsc --noEmit && vite build --mode single",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^5.0.5"
+  }
+}

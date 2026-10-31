@@ -1,0 +1,889 @@
+/* Color tokens for light and dark themes (ADR §14). Purposes are also told
+   apart by dash pattern, not by color alone. */
+:root {
+  color-scheme: light;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #eef0f3;
+  --border: #d5d9e0;
+  --text: #1c2230;
+  --text-2: #5a6475;
+  --accent: #d9480f;
+  --prefill: #2f6fdb;
+  --decode: #c2410c;
+  --attention: #0f8b8d;
+  --expert: #7c3aed;
+  --unified: #4b5563;
+  --kv: #16a34a;
+  --send: #2563eb;
+  --ret: #c026d3;
+  --link: #c4cad4;
+  --nvlink: #9aa5b5;
+  --heat-1: #fde68a;
+  --heat-2: #fbbf24;
+  --heat-3: #f97316;
+  --heat-4: #dc2626;
+  --heat-5: #991b1b;
+  --tracked: #d9480f;
+  --batch: #64748b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0f1218;
+    --surface: #171b23;
+    --surface-2: #1f2530;
+    --border: #2d3442;
+    --text: #e6e9ef;
+    --text-2: #9aa4b5;
+    --accent: #ff8a4c;
+    --prefill: #6ea0ff;
+    --decode: #ff9b5e;
+    --attention: #3cc7c9;
+    --expert: #b18cff;
+    --unified: #a3aab8;
+    --kv: #4ade80;
+    --send: #60a5fa;
+    --ret: #f472f6;
+    --link: #343c4b;
+    --nvlink: #4a5466;
+    --heat-1: #6b5a1c;
+    --heat-2: #a36d0b;
+    --heat-3: #e0761a;
+    --heat-4: #ff4d4d;
+    --heat-5: #ffb3b3;
+    --tracked: #ff8a4c;
+    --batch: #8a96aa;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1218;
+  --surface: #171b23;
+  --surface-2: #1f2530;
+  --border: #2d3442;
+  --text: #e6e9ef;
+  --text-2: #9aa4b5;
+  --accent: #ff8a4c;
+  --prefill: #6ea0ff;
+  --decode: #ff9b5e;
+  --attention: #3cc7c9;
+  --expert: #b18cff;
+  --unified: #a3aab8;
+  --kv: #4ade80;
+  --send: #60a5fa;
+  --ret: #f472f6;
+  --link: #343c4b;
+  --nvlink: #4a5466;
+  --heat-1: #6b5a1c;
+  --heat-2: #a36d0b;
+  --heat-3: #e0761a;
+  --heat-4: #ff4d4d;
+  --heat-5: #ffb3b3;
+  --tracked: #ff8a4c;
+  --batch: #8a96aa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100vh;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+footer.bar {
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+/* Row 1: transport controls. Row 2: prompt input / output tokens. */
+footer.bar .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  align-items: center;
+  padding: 6px 16px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.help b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.help kbd {
+  padding: 0 5px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  font: inherit;
+  color: var(--text);
+}
+
+.help button {
+  margin-left: auto;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.help.collapsed span {
+  display: none;
+}
+
+.bar h1 {
+  font-size: 15px;
+  margin: 0 8px 0 0;
+}
+
+.bar label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bar .grow {
+  flex: 1;
+}
+
+button,
+select,
+input[type='number'],
+textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--text-2);
+}
+
+button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.toggle {
+  padding: 4px 12px;
+}
+
+details.advanced {
+  position: relative;
+}
+
+details.advanced > div {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  z-index: 10;
+  display: grid;
+  gap: 8px;
+  min-width: 240px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.15);
+}
+
+details.prompt-editor > div {
+  position: absolute;
+  z-index: 10;
+  margin-top: 6px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.15);
+  width: min(560px, 90vw);
+}
+
+details.prompt-editor textarea {
+  width: 100%;
+  min-height: 120px;
+}
+
+summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  min-height: 0;
+}
+
+.fabric {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Fill the grid cell; the viewBox scales to fit without pushing the footer. */
+#fabric {
+  position: absolute;
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  display: block;
+}
+
+.panel {
+  overflow-y: auto;
+  padding: 16px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+}
+
+.panel h2 {
+  font-size: 16px;
+  margin: 4px 0 8px;
+}
+
+.panel h3 {
+  font-size: 13px;
+  margin: 16px 0 6px;
+  color: var(--text-2);
+}
+
+.panel p {
+  line-height: 1.6;
+  margin: 0 0 8px;
+}
+
+.panel .kicker {
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.panel dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  margin: 0;
+}
+
+.panel dt {
+  color: var(--text-2);
+}
+
+.panel dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel .notes {
+  font-size: 12px;
+  color: var(--text-2);
+  padding-left: 18px;
+}
+
+.panel .notes li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.panel ul.flows {
+  padding-left: 18px;
+  font-size: 12px;
+}
+
+.tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+  max-height: 3.6em;
+  overflow: hidden;
+  min-width: 0;
+}
+
+footer.bar .row.tokens {
+  gap: 3px;
+}
+
+.tokens .tok {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.tokens .tok.in {
+  border-color: var(--prefill);
+}
+
+.tokens .tok.out {
+  border-color: var(--decode);
+}
+
+.tokens .tok.new {
+  background: var(--decode);
+  color: #fff;
+}
+
+.tokens .more {
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.legend {
+  position: absolute;
+  left: 16px;
+  top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.legend svg {
+  vertical-align: middle;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 20;
+  max-width: 320px;
+  padding: 8px 10px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.18);
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+/* SVG */
+.node-box {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.node-box.role-prefill,
+.node-box.role-unified {
+  stroke: var(--prefill);
+}
+
+.node-box.role-decode {
+  stroke: var(--decode);
+}
+
+.node-box.role-attention,
+.node-box.role-decode-attention {
+  stroke: var(--attention);
+}
+
+.node-box.role-expert,
+.node-box.role-decode-expert {
+  stroke: var(--expert);
+}
+
+.node-label {
+  fill: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.role-label {
+  fill: var(--text-2);
+  font-size: 12px;
+}
+
+.gpu rect {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  stroke-width: 1.2;
+  rx: 4;
+  transition: fill 0.25s;
+}
+
+.gpu text {
+  fill: var(--text-2);
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.gpu.busy rect {
+  stroke-width: 2;
+}
+
+.gpu.act-attention rect,
+.gpu.act-router rect,
+.gpu.act-aggregate rect,
+.gpu.act-head rect,
+.gpu.act-dense rect,
+.gpu.act-scheduler rect {
+  fill: color-mix(in srgb, var(--attention) 35%, var(--surface));
+  stroke: var(--attention);
+}
+
+.gpu.act-experts rect {
+  fill: color-mix(in srgb, var(--expert) 35%, var(--surface));
+  stroke: var(--expert);
+}
+
+.gpu.tracked rect {
+  stroke: var(--tracked);
+  stroke-width: 3;
+}
+
+.switch rect {
+  fill: var(--surface);
+  stroke: var(--text-2);
+  stroke-width: 1.2;
+  rx: 5;
+}
+
+.switch.nvswitch rect {
+  fill: var(--surface-2);
+  stroke: var(--nvlink);
+}
+
+.switch text {
+  fill: var(--text);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.link {
+  stroke: var(--link);
+  stroke-width: 1.2;
+  fill: none;
+  transition: stroke 0.25s, stroke-width 0.25s;
+}
+
+.link.nvlink {
+  stroke: var(--nvlink);
+}
+
+.link-hit {
+  stroke: transparent;
+  stroke-width: 9;
+  fill: none;
+  cursor: pointer;
+}
+
+.link.heat-1 {
+  stroke: var(--heat-1);
+  stroke-width: 2;
+}
+
+.link.heat-2 {
+  stroke: var(--heat-2);
+  stroke-width: 2.6;
+}
+
+.link.heat-3 {
+  stroke: var(--heat-3);
+  stroke-width: 3.2;
+}
+
+.link.heat-4 {
+  stroke: var(--heat-4);
+  stroke-width: 3.8;
+}
+
+.link.heat-5 {
+  stroke: var(--heat-5);
+  stroke-width: 4.4;
+}
+
+.link.flowing {
+  stroke-dasharray: 6 6;
+  animation: dash 0.9s linear infinite;
+}
+
+.link.flowing.reverse {
+  animation-direction: reverse;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+.particle {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+  cursor: pointer;
+}
+
+.particle.p-kv {
+  fill: var(--kv);
+}
+
+.particle.p-dispatch,
+.particle.p-a2f {
+  fill: var(--send);
+}
+
+.particle.p-combine,
+.particle.p-f2a {
+  fill: var(--ret);
+}
+
+.trail {
+  fill: none;
+  stroke-width: 2.4;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.trail.p-kv {
+  stroke: var(--kv);
+  stroke-dasharray: 10 4;
+}
+
+.trail.p-dispatch,
+.trail.p-a2f {
+  stroke: var(--send);
+}
+
+.trail.p-combine,
+.trail.p-f2a {
+  stroke: var(--ret);
+  stroke-dasharray: 4 3;
+}
+
+.dimmed .link:not(.hl),
+.dimmed .gpu:not(.hl),
+.dimmed .switch:not(.hl),
+.dimmed .trail:not(.hl),
+.dimmed .particle:not(.hl) {
+  opacity: 0.18;
+}
+
+.link.hl {
+  stroke-width: 4;
+}
+
+.gpu.hl rect,
+.switch.hl rect {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+@media (max-width: 900px) {
+  .stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(320px, 55vh) auto;
+  }
+
+  .panel {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  #app {
+    height: auto;
+    min-height: 100vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link.flowing {
+    animation: none;
+  }
+}
+
+.panel ul.lanes {
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.panel ul.lanes li {
+  padding: 6px 10px;
+  border-left: 4px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
+.panel ul.lanes li.lane-prefill {
+  border-left-color: var(--prefill);
+}
+
+.panel ul.lanes li.lane-kv {
+  border-left-color: var(--kv);
+}
+
+.panel ul.lanes li.lane-decode {
+  border-left-color: var(--decode);
+}
+
+.segmented {
+  display: inline-flex;
+}
+
+.segmented button {
+  border-radius: 0;
+}
+
+.segmented button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.segmented button:last-child {
+  border-radius: 0 6px 6px 0;
+  border-left: none;
+}
+
+button:disabled,
+input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Scale-up only: the leaf-spine exists but carries nothing. */
+.scaleup-only .link.access,
+.scaleup-only .link.fabric,
+.scaleup-only .switch.leaf,
+.scaleup-only .switch.spine {
+  opacity: 0.2;
+}
+
+/* Inside-the-GPU cards (ADR §22) */
+.card-box {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.gpu-card.role-P .card-box,
+.gpu-card.role-U .card-box {
+  stroke: var(--prefill);
+}
+
+.gpu-card.role-D .card-box,
+.gpu-card.role-DA .card-box {
+  stroke: var(--decode);
+}
+
+.gpu-card.role-A .card-box {
+  stroke: var(--attention);
+}
+
+.gpu-card.role-F .card-box,
+.gpu-card.role-DF .card-box {
+  stroke: var(--expert);
+}
+
+.card-connector {
+  stroke: var(--text-2);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  fill: none;
+  opacity: 0.6;
+}
+
+.card-title {
+  fill: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.card-sub {
+  fill: var(--text-2);
+  font-size: 11px;
+}
+
+.blk rect {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  transition: fill 0.25s, stroke 0.25s;
+}
+
+.blk-label {
+  fill: var(--text-2);
+  font-size: 9px;
+  pointer-events: none;
+}
+
+.blk.on rect {
+  fill: color-mix(in srgb, var(--attention) 40%, var(--surface));
+  stroke: var(--attention);
+  stroke-width: 2;
+}
+
+.blk.on.blk-experts rect,
+.blk.on.blk-recv rect {
+  fill: color-mix(in srgb, var(--expert) 40%, var(--surface));
+  stroke: var(--expert);
+}
+
+.blk.on.blk-kv rect {
+  fill: color-mix(in srgb, var(--kv) 40%, var(--surface));
+  stroke: var(--kv);
+}
+
+.blk.on .blk-label {
+  fill: var(--text);
+  font-weight: 600;
+}
+
+.blk-arrow {
+  stroke: var(--text-2);
+  stroke-width: 1.2;
+}
+
+.xp {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  stroke-width: 0.6;
+}
+
+.xp.lit {
+  fill: var(--expert);
+  stroke: var(--expert);
+}
+
+.hbm-track {
+  fill: var(--surface-2);
+  stroke: var(--border);
+}
+
+.hbm-w {
+  fill: var(--unified);
+}
+
+.hbm-kv {
+  fill: var(--kv);
+}
+
+.hbm-act {
+  fill: var(--send);
+}
+
+/* Block zoom (ADR §23) */
+.gpu-card .blk {
+  cursor: pointer;
+}
+
+.gpu-card .blk:focus-visible rect,
+.gpu-card .blk:hover rect {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.ztable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+.ztable th,
+.ztable td {
+  text-align: left;
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ztable tr.w-here td:first-child {
+  color: var(--expert);
+  font-weight: 600;
+}
+
+.zbar {
+  display: inline-block;
+  width: 70px;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.zfill {
+  display: block;
+  height: 100%;
+  background: var(--expert);
+}
+
+.zlist {
+  padding-left: 18px;
+  font-size: 12px;
+}
+
+.zlist li {
+  margin-bottom: 8px;
+}
+
+.ffn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.ffn span {
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-variant-numeric: tabular-nums;
+}
