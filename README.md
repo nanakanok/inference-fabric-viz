@@ -13,6 +13,8 @@ timestamp: "2026-10-31"
 
 # inference-fabric-viz
 
+**Live demo: <https://nanakanok.github.io/inference-fabric-viz/>**
+
 An animated, step-through web page that shows how MoE LLM inference traffic moves across a GPU fabric:
 
 - **PD disaggregation**: Prefill and Decode on separate GPUs, with a KV Cache handoff.
@@ -59,6 +61,8 @@ npm run build        # static site in dist/
 npm run build:single # one self-contained HTML in dist-single/index.html (works from file://)
 ```
 
+Pushing to `main` runs `.github/workflows/pages.yml`, which tests, builds and deploys `dist/` to GitHub Pages.
+
 Requires Node.js 20 or later. No runtime dependencies: Vite + TypeScript + plain SVG.
 
 ## Files
@@ -70,6 +74,7 @@ Requires Node.js 20 or later. No runtime dependencies: Vite + TypeScript + plain
 | `src/view/` | SVG layout and renderer, tooltips and detail panels |
 | `test/` | Vitest suites |
 | `docs/adr/` | Architecture decision records |
+| `.github/workflows/pages.yml` | GitHub Pages deployment |
 
 ## Sources
 
@@ -89,6 +94,8 @@ Requires Node.js 20 or later. No runtime dependencies: Vite + TypeScript + plain
 <summary>日本語</summary>
 
 # inference-fabric-viz
+
+**デモ: <https://nanakanok.github.io/inference-fabric-viz/>**
 
 MoE LLM の推論で、通信が GPU ファブリックをどう流れるかを、アニメーションとステップ送りで見せる Web ページです。
 
@@ -136,6 +143,8 @@ npm run build        # 静的サイトを dist/ に出力
 npm run build:single # 単一の HTML を dist-single/index.html に出力（file:// でも動作）
 ```
 
+`main` に push すると `.github/workflows/pages.yml` が動き、テスト・ビルドのうえ `dist/` を GitHub Pages に公開します。
+
 Node.js 20 以降が必要です。実行時の依存はありません（Vite + TypeScript + SVG）。
 
 ## ファイル
@@ -147,6 +156,7 @@ Node.js 20 以降が必要です。実行時の依存はありません（Vite +
 | `src/view/` | SVG のレイアウトと描画、ツールチップ、詳細パネル |
 | `test/` | Vitest のテスト |
 | `docs/adr/` | 設計判断の記録（ADR） |
+| `.github/workflows/pages.yml` | GitHub Pages への公開 |
 
 ## 出典
 
